@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relief Teams</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+    <h2>Disaster Relief</h2>
+    <a href="dashboard.html">Dashboard</a>
+</nav>
+
+<div class="container">
+
+    <h1>Relief Team Management</h1>
+
+    <form id="teamForm">
+
+        <label>Team Name</label>
+        <input type="text" id="teamName" required>
+
+        <label>Team Leader</label>
+        <input type="text" id="leader" required>
+
+        <label>Team Location</label>
+        <input type="text" id="teamLocation" required>
+
+        <button type="submit">Add Team</button>
+    </form>
+
+    <p id="teamMessage"></p>
+
+    <h2>Relief Teams</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Team</th>
+                <th>Leader</th>
+                <th>Location</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody id="teamTable"></tbody>
+    </table>
+
+</div>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>
