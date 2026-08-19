@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disaster Relief Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+    <div>
+        <h1>Disaster Relief Dashboard</h1>
+        <span>Welcome, {{ session["user_name"] }}</span>
+    </div>
+    <a class="logout" href="{{ url_for('logout') }}">Logout</a>
+</header>
+
+<main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="message {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <section class="grid">
+        <div class="card">
+            <h2>Request a Resource</h2>
+            <form method="POST" action="{{ url_for('request_resource') }}">
+                <label>Resource Name</label>
+                <input name="resource_name" placeholder="Food / Water / Medicine" required>
+
+                <label>Quantity</label>
+                <input type="number" name="quantity" min="1" required>
+
+                <label>Location</label>
+                <input name="location" placeholder="Relief camp location" required>
+
+                <label>Priority</label>
+                <select name="priority">
+                    <option>High</option>
+                    <option selected>Medium</option>
+                    <option>Low</option>
+                </select>
+
+                <button type="submit">Submit Request</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Add Available Resource</h2>
+            <form method="POST" action="{{ url_for('add_resource') }}">
+                <label>Resource Name</label>
+                <input name="name" placeholder="Food / Water / Medicine" required>
+
+                <label>Quantity</label>
+                <input type="number" name="quantity" min="1" required>
+
+                <label>Location</label>
+                <input name="location" placeholder="Storage location" required>
+
+                <button type="submit">Add Resource</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>Resource Requests</h2>
+        <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th><th>Resource</th><th>Qty</th><th>Location</th>
+                    <th>Priority</th><th>Status</th><th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in requests %}
+                <tr>
+                    <td>{{ item["id"] }}</td>
+                    <td>{{ item["resource_name"] }}</td>
+                    <td>{{ item["quantity"] }}</td>
+                    <td>{{ item["location"] }}</td>
+                    <td>{{ item["priority"] }}</td>
+                    <td>{{ item["status"] }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('update_status', request_id=item['id']) }}" class="inline">
+                            <select name="status">
+                                <option {% if item["status"]=="Pending" %}selected{% endif %}>Pending</option>
+                                <option {% if item["status"]=="Approved" %}selected{% endif %}>Approved</option>
+                                <option {% if item["status"]=="Completed" %}selected{% endif %}>Completed</option>
+                            </select>
+                            <button type="submit">Update</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="7">No requests yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>Available Resources</h2>
+        <div class="table-wrap">
+        <table>
+            <thead><tr><th>ID</th><th>Resource</th><th>Quantity</th><th>Location</th></tr></thead>
+            <tbody>
+            {% for item in resources %}
+                <tr>
+                    <td>{{ item["id"] }}</td>
+                    <td>{{ item["name"] }}</td>
+                    <td>{{ item["quantity"] }}</td>
+                    <td>{{ item["location"] }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="4">No resources added yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>
